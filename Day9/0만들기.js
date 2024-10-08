@@ -26,3 +26,5 @@ let t = Number(input[0]);
 for (let i = 1; i <= t; i++) {
   let n = Number(input[i]);
 }
+
+console.log(t);
