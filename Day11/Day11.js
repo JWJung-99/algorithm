@@ -1,6 +1,6 @@
 /*
 [문제 설명]
-DFS
+DFS DFS
 
 [입력]
 DFS
