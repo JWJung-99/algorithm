@@ -31,6 +31,20 @@ def solution(begin, target, words):
                     if wordList[word] == 0 or wordList[word] > wordList[cur] + 1:
                         wordList[word] = wordList[cur] + 1     
                         queue.append(word)
+                
+                '''
+                diff_count = 0
+                for i in range(len(cur)):
+                    if cur[i] != word[i]:
+                        diff_count += 1
+                    if diff_count > 1:
+                        break
+                
+                if diff_count == 1:
+                    if wordList[word] == 0 or wordList[word] > wordList[cur] + 1:
+                        wordList[word] = wordList[cur] + 1
+                        queue.append(word)
+                '''
                         
     bfs()
 
