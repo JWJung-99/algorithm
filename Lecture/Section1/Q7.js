@@ -6,7 +6,7 @@ function solution(num, arr) {
 	let violated = 0;
 
 	arr.forEach((car) => {
-		if ((car - num) % 10 === 0) {
+		if ((car & 10) === 0) {
 			violated += 1;
 		}
 	});
