@@ -1,2 +1,2 @@
 1
-teachermode e
+8 3
