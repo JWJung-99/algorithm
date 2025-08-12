@@ -3,20 +3,19 @@ let input = fs.readFileSync('../../input.txt').toString().trim().split('\n');
 let testCase = Number(input[0]);
 
 function solution(arr) {
-	let answer = 0;
-	let inARow = 0;
+	let sortedArr = [...arr].sort((a, b) => b - a);
+	let rankMap = {};
+	let rank = 1;
 
-	for (let score of arr) {
-		if (score === 0) {
-			inARow = 0;
-			continue;
+	for (let score of sortedArr) {
+		if (!(score in rankMap)) {
+			rankMap[score] = rank;
 		}
 
-		inARow += 1;
-		answer += inARow;
+		rank++;
 	}
 
-	return answer;
+	return arr.map((score) => rankMap[score]).join(' ');
 }
 
 for (let i = 1; i <= testCase; i++) {
