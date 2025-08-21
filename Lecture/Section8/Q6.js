@@ -2,20 +2,28 @@ import fs from 'fs';
 let input = fs.readFileSync('../../input.txt').toString().trim().split('\n');
 let testCase = Number(input[0]);
 
+/**
+ *
+ * @param {number} limit
+ * @param {number[]} arr
+ * @returns {number}
+ */
 function solution(limit, arr) {
 	let answer = 0;
+	let N = arr.length;
 
-	function DFS(L, sum) {
+	function DFS(depth, sum) {
+		// sum이 무게 제한을 넘기면 탐색 종료
 		if (sum > limit) return;
 
-		if (L === arr.length) {
+		if (depth === N) {
 			answer = Math.max(answer, sum);
 		} else {
-			// L번째 바둑이를 태운 경우
-			DFS(L + 1, sum + arr[L]);
+			// i번째 바둑이를 태우거나
+			DFS(depth + 1, sum + arr[depth]);
 
-			// L번째 바둑이를 태우지 않은 경우
-			DFS(L + 1, sum);
+			// 안 태우거나
+			DFS(depth + 1, sum);
 		}
 	}
 
@@ -24,8 +32,15 @@ function solution(limit, arr) {
 	return answer;
 }
 
-for (let i = 1; i <= testCase; i++) {
-	const [c, n] = input[i].split(' ').map(Number);
-	const dogs = [81, 58, 42, 33, 61];
-	console.log(solution(c, dogs));
+let index = 1;
+while (testCase > 0) {
+	const [C, N] = input[index].split(' ').map(Number);
+	let weights = [];
+	for (let i = index + 1; i <= index + N; i++) {
+		weights.push(Number(input[i]));
+	}
+	console.log(solution(C, weights));
+
+	testCase--;
+	index += 2;
 }
