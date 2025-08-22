@@ -2,6 +2,12 @@ import fs from 'fs';
 let input = fs.readFileSync('../../input.txt').toString().trim().split('\n');
 let testCase = Number(input[0]);
 
+/**
+ * @description 거슬러 줄 동전의 최소개수를 출력
+ * @param {number} limit
+ * @param {number[]} arr
+ * @returns {number}
+ */
 function solution(limit, arr) {
 	let answer = limit;
 

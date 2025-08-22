@@ -2,6 +2,12 @@ import fs from 'fs';
 let input = fs.readFileSync('../../input.txt').toString().trim().split('\n');
 let testCase = Number(input[0]);
 
+/**
+ * @description 10이하의 N개의 자연수가 주어지면 이 중 M개를 뽑아 일렬로 나열하는 방법을 모두 출력
+ * @param {number} m
+ * @param {number[]} arr
+ * @returns {string}
+ */
 function solution(m, arr) {
 	let result = [];
 	let tmp = Array.from({ length: m }, () => 0);
