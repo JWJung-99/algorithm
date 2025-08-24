@@ -4,22 +4,35 @@ let testCase = Number(input[0]);
 
 function solution(N) {
 	let answer = [];
-	let visited = Array.from({ length: N + 1 }).fill(false);
+	// let visited = Array.from({ length: N + 1 }).fill(false);
 
-	function DFS(v) {
-		if (v > N) {
-			let tmp = '';
-			for (let i = 1; i <= N; i++) {
-				if (visited[i]) tmp += i + ' ';
-			}
-			if (tmp.length > 0) answer.push(tmp.trim());
+	// function DFS(v) {
+	// 	if (v > N) {
+	// 		let tmp = '';
+	// 		for (let i = 1; i <= N; i++) {
+	// 			if (visited[i]) tmp += i + ' ';
+	// 		}
+	// 		if (tmp.length > 0) answer.push(tmp.trim());
 
-			return;
+	// 		return;
+	// 	} else {
+	// 		visited[v] = true;
+	// 		DFS(v + 1);
+	// 		visited[v] = false;
+	// 		DFS(v + 1);
+	// 	}
+	// }
+
+	let selected = [];
+
+	function DFS(n) {
+		if (n > N) {
+			if (selected.length) answer.push(selected.join(' '));
 		} else {
-			visited[v] = true;
-			DFS(v + 1);
-			visited[v] = false;
-			DFS(v + 1);
+			selected.push(n);
+			DFS(n + 1);
+			selected.pop();
+			DFS(n + 1);
 		}
 	}
 
