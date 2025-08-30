@@ -15,7 +15,6 @@ function solution(questions, M) {
 		for (let i = M; i >= time; i--) {
 			dp[i] = Math.max(dp[i], dp[i - time] + score);
 		}
-		console.log(dp);
 	}
 
 	return dp[M];
