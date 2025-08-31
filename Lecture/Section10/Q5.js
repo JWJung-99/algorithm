@@ -27,6 +27,7 @@ while (testCase > 0) {
 	for (let i = index + 1; i <= index + N; i++) {
 		questions.push(input[i].split(' ').map(Number));
 	}
+	console.log(questions);
 	console.log(solution(questions, M));
 
 	testCase--;
