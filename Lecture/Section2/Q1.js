@@ -4,7 +4,6 @@ let testCase = Number(input[0]);
 
 function solution(n, arr) {
 	let answer = [];
-
 	answer.push(arr[0]);
 
 	for (let i = 1; i < arr.length; i++) {
