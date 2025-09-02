@@ -5,11 +5,9 @@ let testCase = Number(input[0]);
 function rsp(a, b) {
 	if (a === b) return 'D';
 
-	if ((a === 2 && b === 1) || (a === 3 && b === 2) || (a === 1 && b === 3)) {
+	if ((a === 2 && b === 1) || (a === 3 && b === 2) || (a === 1 && b === 3))
 		return 'A';
-	} else {
-		return 'B';
-	}
+	else return 'B';
 }
 
 function solution(a, b) {
