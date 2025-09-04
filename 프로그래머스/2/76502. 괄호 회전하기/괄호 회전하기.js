@@ -1,5 +1,6 @@
 function isRightString(arr) {
     let stack = [];
+    let map = {')': '(', '}': '{', ']': '['};
 
     for (let item of arr) {
         if (item === '(' || item === '[' || item === '{') {
@@ -7,7 +8,7 @@ function isRightString(arr) {
         } else {
             if (stack.length === 0) return false;
             
-            if ((item === ')' && stack.pop() !== '(') || (item === '}' && stack.pop() !== '{') || (item === ']' && stack.pop() !== '[')) return false;
+            if (map[item] !== stack.pop()) return false;
         }
     }
     
