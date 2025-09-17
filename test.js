@@ -1,20 +1,29 @@
-const numbers = [9, 1, 5, 3, 6, 2];
+function isPrime(num) {
+	if (num <= 1) return false;
+	if (num === 2) return true;
 
-function solution1(numbers) {
-	let answer = [];
-
-	for (let i = 0; i < numbers.length; i++) {
-		let bigNum = -1;
-		for (let j = i + 1; j < numbers.length; j++) {
-			if (numbers[j] > numbers[i]) {
-				bigNum = numbers[j];
-				break;
-			}
+	for (let i = 2; i <= Math.floor(Math.sqrt(num)); i++) {
+		if (num % i === 0) {
+			return false;
 		}
-		answer.push(bigNum);
+	}
+
+	return true;
+}
+
+function solution1(n, k) {
+	let answer = 0;
+
+	console.log(n.toString(k));
+	let arr = n.toString(k).split(0);
+
+	for (let element of arr) {
+		if (isPrime(Number(element))) answer++;
 	}
 
 	return answer;
 }
 
-console.log(solution1(numbers));
+console.log(solution1(437674, 3));
+console.log(solution1(110011, 10));
+console.log(isPrime(1));
