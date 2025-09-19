@@ -1,0 +1,16 @@
+function solution(order) {
+    let result = 0;
+    let N = order.length;
+    let stack = [];
+    
+    for (let i = 1; i <= order.length; i++) {
+        stack.push(i);
+        
+        while (stack.length !== 0 && stack.at(-1) === order[result]) {
+            stack.pop();
+            result++;
+        }
+    }
+
+    return result;
+}
