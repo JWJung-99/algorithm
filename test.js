@@ -1,29 +1,32 @@
-function isPrime(num) {
-	if (num <= 1) return false;
-	if (num === 2) return true;
+function solution(land) {
+	let result = [];
+	let N = land.length;
+	let visited = Array.from({ length: N }, () => Array(4).fill(false));
 
-	for (let i = 2; i <= Math.floor(Math.sqrt(num)); i++) {
-		if (num % i === 0) {
-			return false;
+	function DFS(n, sum) {
+		if (n >= N) {
+			result.push(sum);
+			return;
+		} else {
+			for (let i = 0; i < 4; i++) {
+				if (n > 0 && visited[n - 1][i] === true) continue;
+
+				visited[n][i] = true;
+				DFS(n + 1, sum + land[n][i]);
+				visited[n][i] = false;
+			}
 		}
 	}
 
-	return true;
+	DFS(0, 0);
+
+	return Math.max(...result);
 }
 
-function solution1(n, k) {
-	let answer = 0;
-
-	console.log(n.toString(k));
-	let arr = n.toString(k).split(0);
-
-	for (let element of arr) {
-		if (isPrime(Number(element))) answer++;
-	}
-
-	return answer;
-}
-
-console.log(solution1(437674, 3));
-console.log(solution1(110011, 10));
-console.log(isPrime(1));
+console.log(
+	solution([
+		[1, 2, 3, 5],
+		[5, 6, 7, 8],
+		[4, 3, 2, 1],
+	])
+);
