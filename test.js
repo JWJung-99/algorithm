@@ -1,32 +1,33 @@
-function solution(land) {
-	let result = [];
-	let N = land.length;
-	let visited = Array.from({ length: N }, () => Array(4).fill(false));
+function solution(x, y, n) {
+	let answer = -1;
 
-	function DFS(n, sum) {
-		if (n >= N) {
-			result.push(sum);
-			return;
-		} else {
-			for (let i = 0; i < 4; i++) {
-				if (n > 0 && visited[n - 1][i] === true) continue;
+	let queue = [];
+	queue.push([x, 0]);
 
-				visited[n][i] = true;
-				DFS(n + 1, sum + land[n][i]);
-				visited[n][i] = false;
+	while (queue.length) {
+		let [cur, cnt] = queue.shift();
+
+		if (cur === y) {
+			answer = cnt;
+			break;
+		}
+
+		for (let i = 0; i < 3; i++) {
+			let next;
+
+			if (i === 0) next = cur + n;
+			else if (i === 1) next = cur * 2;
+			else next = cur * 3;
+
+			if (next <= y) {
+				queue.push([next, cnt + 1]);
 			}
 		}
 	}
 
-	DFS(0, 0);
-
-	return Math.max(...result);
+	return answer;
 }
 
-console.log(
-	solution([
-		[1, 2, 3, 5],
-		[5, 6, 7, 8],
-		[4, 3, 2, 1],
-	])
-);
+console.log(solution(10, 40, 5));
+console.log(solution(10, 40, 30));
+console.log(solution(2, 5, 4));
