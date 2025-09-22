@@ -23,6 +23,7 @@ function solution(m, n, puddles) {
 	let answer = 0;
 
 	let graph = Array.from({ length: m }, () => Array(n).fill(1));
+	const ways = Array.from({ length: n }, () => Array(m).fill(0));
 
 	// 물에 잠긴 지역 방문 방지
 	for (let [x, y] of puddles) {
@@ -34,13 +35,12 @@ function solution(m, n, puddles) {
 	let queue = [];
 
 	// 출발 노드 방문 처리
-	queue.push([0, 0, 0]);
+	queue.push([0, 0]);
+	ways[0][0] = 1;
 
 	// BFS
 	while (queue.length) {
-		let [curX, curY, dist] = queue.shift();
-
-		if (curX === m - 1 && curY === n - 1) answer++;
+		let [curX, curY] = queue.shift();
 
 		for (let i = 0; i < 2; i++) {
 			let nextX = curX + dx[i];
@@ -48,7 +48,12 @@ function solution(m, n, puddles) {
 
 			if (nextX > m - 1 || nextY > n - 1 || graph[nextX][nextY] === 0) continue;
 
-			queue.push([nextX, nextY, dist + 1]);
+			const prevWays = ways[nextX][nextY];
+			ways[nextX][nextY] = (ways[nextX][nextY] + ways[curX][curY]) % MOD;
+
+			if (prevWays === 0) {
+				queue.push([nextX, nextY]);
+			}
 		}
 	}
 
