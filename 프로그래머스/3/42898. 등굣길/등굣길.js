@@ -49,7 +49,7 @@ function solution(m, n, puddles) {
 			if (nextX > m - 1 || nextY > n - 1 || graph[nextX][nextY] === 0) continue;
 
 			const prevWays = ways[nextX][nextY];
-			ways[nextX][nextY] = (ways[nextX][nextY] + ways[curX][curY]) % MOD;
+			ways[nextX][nextY] = (ways[nextX][nextY] + ways[curX][curY]) % 1000000007;
 
 			if (prevWays === 0) {
 				queue.push([nextX, nextY]);
