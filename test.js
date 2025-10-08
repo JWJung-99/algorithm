@@ -1,22 +1,28 @@
-function solution(sizes) {
-	let maxW = 0;
-	let maxH = 0;
+function solution(answers) {
+	let giveUps = [
+		[1, 2, 3, 4, 5],
+		[2, 1, 2, 3, 2, 4, 2, 5],
+		[3, 3, 1, 1, 2, 2, 4, 4, 5, 5],
+	];
 
-	for (let card of sizes) {
-		let [w, h] = card.sort((a, b) => b - a);
+	let result = [];
+	let maxScore = 0;
 
-		if (maxW < w) maxW = w;
-		if (maxH < h) maxH = h;
-	}
+	giveUps.forEach((giveUp, index) => {
+		let score = 0;
+		for (let i = 0; i < answers.length; i++) {
+			if (answers[i] === giveUp[i % giveUp.length]) score++;
+		}
 
-	return maxW * maxH;
+		if (score > maxScore) {
+			result = [index + 1];
+			maxScore = score;
+		} else if (score === maxScore) {
+			result.push(index + 1);
+		}
+	});
+
+	return result;
 }
 
-console.log(
-	solution([
-		[60, 50],
-		[30, 70],
-		[60, 30],
-		[80, 40],
-	])
-);
+console.log(solution([1, 3, 2, 4, 2]));
