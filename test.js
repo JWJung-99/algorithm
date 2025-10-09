@@ -1,28 +1,46 @@
-function solution(answers) {
-	let giveUps = [
-		[1, 2, 3, 4, 5],
-		[2, 1, 2, 3, 2, 4, 2, 5],
-		[3, 3, 1, 1, 2, 2, 4, 4, 5, 5],
-	];
+function solution(k, dungeons) {
+	let n = dungeons.length;
+	let visited = Array(n).fill(false);
+	let selected = [];
+	let maxResult = 0;
 
-	let result = [];
-	let maxScore = 0;
+	function DFS(depth) {
+		if (depth === n) {
+			let remaining = k;
+			let result = 0;
 
-	giveUps.forEach((giveUp, index) => {
-		let score = 0;
-		for (let i = 0; i < answers.length; i++) {
-			if (answers[i] === giveUp[i % giveUp.length]) score++;
+			for (let index of selected) {
+				let [minimum, usage] = dungeons[index];
+
+				if (remaining < minimum) continue;
+
+				remaining -= usage;
+				result++;
+			}
+
+			if (result > maxResult) maxResult = result;
+		} else {
+			for (let i = 0; i < n; i++) {
+				if (visited[i]) continue;
+
+				visited[i] = true;
+				selected.push(i);
+				DFS(depth + 1);
+				selected.pop();
+				visited[i] = false;
+			}
 		}
+	}
 
-		if (score > maxScore) {
-			result = [index + 1];
-			maxScore = score;
-		} else if (score === maxScore) {
-			result.push(index + 1);
-		}
-	});
+	DFS(0);
 
-	return result;
+	return maxResult;
 }
 
-console.log(solution([1, 3, 2, 4, 2]));
+console.log(
+	solution(80, [
+		[80, 20],
+		[50, 40],
+		[30, 10],
+	])
+);
