@@ -1,13 +1,13 @@
 function solution(sizes) {
-    let maxWidth = 0;
-    let maxHeight = 0;
+    let maxW = 0;
+    let maxH = 0;
     
-    for (let [w, h] of sizes) {
-        if (h > w) [w, h] = [h, w];
+    for (let card of sizes) {
+        let [w, h] = card.sort((a, b) => b - a);
         
-        if (maxWidth < w) maxWidth = w;
-        if (maxHeight < h) maxHeight = h;
+        if (maxW < w) maxW = w;
+        if (maxH < h) maxH = h;
     }
     
-    return maxWidth * maxHeight;
+    return maxW * maxH;
 }
