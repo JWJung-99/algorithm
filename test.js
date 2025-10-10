@@ -1,46 +1,53 @@
-function solution(k, dungeons) {
-	let n = dungeons.length;
-	let visited = Array(n).fill(false);
-	let selected = [];
-	let maxResult = 0;
+function solution(n, wires) {
+	let minResult = n;
 
-	function DFS(depth) {
-		if (depth === n) {
-			let remaining = k;
-			let result = 0;
+	for (let i = 0; i < wires.length; i++) {
+		// 1. 전선 하나씩 끊어서 그래프 생성
+		let arr = wires.filter((_, index) => index !== i);
+		let graph = Array.from({ length: n + 1 }, () => []);
 
-			for (let index of selected) {
-				let [minimum, usage] = dungeons[index];
+		for (let [x, y] of arr) {
+			graph[x].push(y);
+			graph[y].push(x);
+		}
 
-				if (remaining < minimum) continue;
+		// 2. 1이 속한 네트워크에 연결된 송전탑의 개수 계산
+		let network = 0;
+		let visited = Array(n + 1).fill(false);
+		let queue = [1];
+		visited[1] = true;
 
-				remaining -= usage;
-				result++;
-			}
+		while (queue.length) {
+			let curNode = queue.shift();
+			network++;
 
-			if (result > maxResult) maxResult = result;
-		} else {
-			for (let i = 0; i < n; i++) {
-				if (visited[i]) continue;
+			for (let next of graph[curNode]) {
+				if (visited[next]) continue;
 
-				visited[i] = true;
-				selected.push(i);
-				DFS(depth + 1);
-				selected.pop();
-				visited[i] = false;
+				visited[next] = true;
+				queue.push(next);
 			}
 		}
+
+		// 3. 두 전력망의 송전탑의 개수 차이 계산
+		let diff = Math.abs(n - network * 2);
+
+		// 4. 송전탑의 개수 차이의 최솟값 계산
+		if (minResult > diff) minResult = diff;
 	}
 
-	DFS(0);
-
-	return maxResult;
+	return minResult;
 }
 
 console.log(
-	solution(80, [
-		[80, 20],
-		[50, 40],
-		[30, 10],
+	solution(9, [
+		[1, 3],
+		[2, 3],
+		[3, 4],
+		[4, 5],
+		[4, 6],
+		[4, 7],
+		[7, 8],
+		[7, 9],
 	])
 );
