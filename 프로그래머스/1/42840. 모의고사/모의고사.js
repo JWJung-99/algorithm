@@ -1,22 +1,22 @@
 function solution(answers) {
-  let answer = [];
-
-  const answer1 = [1, 2, 3, 4, 5];
-  const answer2 = [2, 1, 2, 3, 2, 4, 2, 5];
-  const answer3 = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5];
-  const scores = [0, 0, 0];
-
-  answers.forEach((item, index) => {
-    if (item === answer1[index % answer1.length]) scores[0]++;
-    if (item === answer2[index % answer2.length]) scores[1]++;
-    if (item === answer3[index % answer3.length]) scores[2]++;
-  });
-
-  const maxScore = Math.max(...scores);
-
-  if (scores[0] === maxScore) answer.push(1);
-  if (scores[1] === maxScore) answer.push(2);
-  if (scores[2] === maxScore) answer.push(3);
-
-  return answer;
+    let giveUps = [[1, 2, 3, 4, 5], [2, 1, 2, 3, 2, 4, 2, 5], [3, 3, 1, 1, 2, 2, 4, 4, 5, 5]];
+    
+    let result = [];
+    let maxScore = 0;
+    
+    giveUps.forEach((giveUp, index) => {
+        let score = 0;
+        for (let i = 0; i < answers.length; i++) {
+            if (answers[i] === giveUp[i % giveUp.length]) score++;
+        }
+        
+        if (score > maxScore) {
+            result = [index + 1];
+            maxScore = score;
+        } else if (score === maxScore) {
+            result.push(index + 1);
+        }
+    });
+    
+   return result;
 }
