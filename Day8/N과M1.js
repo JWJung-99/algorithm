@@ -23,7 +23,8 @@ let [N, M] = input[0].split(' ').map(Number);
 let numbers = [];
 
 let answer = '';
-// 백트래킹
+
+// 풀이 1: 유망한 노드 판단
 function possible(x) {
 	for (let a of numbers) {
 		if (a == x) return false;
@@ -32,9 +33,9 @@ function possible(x) {
 }
 
 function dfs(index) {
-	if (index == m) answer += numbers.join(' ') + '\n';
+	if (index == M) answer += numbers.join(' ') + '\n';
 
-	for (let i = 1; i <= n; i++) {
+	for (let i = 1; i <= N; i++) {
 		if (!possible(i)) continue;
 
 		numbers.push(i);
@@ -46,7 +47,7 @@ function dfs(index) {
 dfs(0);
 console.log(answer);
 
-// DFS
+// 풀이 2: 방문 배열 사용
 let visited = Array(N + 1).fill(false);
 let selected = [];
 answer = [];

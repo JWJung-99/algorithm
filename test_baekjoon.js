@@ -4,25 +4,28 @@ let input = fs.readFileSync('./input.txt').toString().trim().split('\n');
 // let fs = require('fs');
 // let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-let N = Number(input[0]);
-let K = Number(input[1]);
+let [N, M] = input[0].split(' ').map(Number);
 
-let start = 1;
-let end = N * N;
-let answer = 0;
+let visited = Array(N + 1).fill(false);
+let selected = [];
+let answer = [];
 
-while (start <= end) {
-	let mid = parseInt((start + end) / 2);
+function DFS(n) {
+	if (n === M) {
+		answer.push(selected.join(' '));
+	} else {
+		for (let i = 1; i <= N; i++) {
+			if (visited[i]) continue;
 
-	let cnt = 0;
-	for (let i = 1; i <= N; i++) {
-		cnt += Math.min(parseInt(mid / i), N);
+			visited[i] = true;
+			selected.push(i);
+			DFS(n + 1);
+			selected.pop();
+			visited[i] = false;
+		}
 	}
-
-	if (cnt >= K) {
-		answer = mid;
-		end = mid - 1;
-	} else start = mid + 1;
 }
 
-console.log(answer);
+DFS(0);
+
+console.log(answer.join('\n'));
