@@ -13,35 +13,60 @@
 수열은 사전 순으로 증가하는 순서로 출력해야 한다.
 */
 
-import fs from "fs";
-let input = fs.readFileSync("../input.txt").toString().trim().split("\n");
+import fs from 'fs';
+let input = fs.readFileSync('../input.txt').toString().trim().split('\n');
 
 // let fs = require('fs');
 // let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-let [n, m] = input[0].split(" ").map(Number);
+let [N, M] = input[0].split(' ').map(Number);
 let numbers = [];
 
-let answer = "";
-
+let answer = '';
+// 백트래킹
 function possible(x) {
-  for (let a of numbers) {
-    if (a == x) return false;
-  }
-  return true;
+	for (let a of numbers) {
+		if (a == x) return false;
+	}
+	return true;
 }
 
 function dfs(index) {
-  if (index == m) answer += numbers.join(" ") + "\n";
+	if (index == m) answer += numbers.join(' ') + '\n';
 
-  for (let i = 1; i <= n; i++) {
-    if (!possible(i)) continue;
+	for (let i = 1; i <= n; i++) {
+		if (!possible(i)) continue;
 
-    numbers.push(i);
-    dfs(index + 1);
-    numbers.pop();
-  }
+		numbers.push(i);
+		dfs(index + 1);
+		numbers.pop();
+	}
 }
 
 dfs(0);
 console.log(answer);
+
+// DFS
+let visited = Array(N + 1).fill(false);
+let selected = [];
+answer = [];
+
+function DFS(n) {
+	if (n === M) {
+		answer.push(selected.join(' '));
+	} else {
+		for (let i = 1; i <= N; i++) {
+			if (visited[i]) continue;
+
+			visited[i] = true;
+			selected.push(i);
+			DFS(n + 1);
+			selected.pop();
+			visited[i] = false;
+		}
+	}
+}
+
+DFS(0);
+
+console.log(answer.join('\n'));
