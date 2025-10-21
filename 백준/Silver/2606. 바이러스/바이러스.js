@@ -1,27 +1,28 @@
 let fs = require('fs');
 let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-const n = Number(input[0]);
-const links = Number(input[1]);
-const graph = new Array(n + 1).fill([]);
-let visited = new Array(n + 1).fill(false);
-let answer = 0;
-
-for (let i = 0; i < links; i++) {
-  const [start, end] = input[i + 2].split(" ").map(Number);
-
-  graph[start] = [...graph[start], end];
-  graph[end] = [...graph[end], start];
+let N = Number(input[0]);
+let pairs = Number(input[1]);
+let network = Array.from({ length: N + 1 }, () => []);
+for (let i = 2; i <= pairs + 1; i++) {
+	let [from, to] = input[i].split(' ').map(Number);
+	network[from].push(to);
+	network[to].push(from);
 }
 
-const dfs = (graph, v, visited) => {
-  visited[v] = true;
-  answer++;
+let visited = Array(N + 1).fill(false);
+let answer = 0;
 
-  for (let x of graph[v]) {
-    if (!visited[x]) dfs(graph, x, visited);
-  }
-};
+function DFS(cur) {
+	for (let next of network[cur]) {
+		if (visited[next]) continue;
 
-dfs(graph, 1, visited);
-console.log(answer - 1);
+		visited[next] = true;
+		answer++;
+		DFS(next);
+	}
+}
+
+visited[1] = true;
+DFS(1);
+console.log(answer);
