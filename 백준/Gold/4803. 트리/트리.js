@@ -1,56 +1,46 @@
 let fs = require('fs');
 let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-function hasCycle(graph, node, prev, visited) {
-  visited[node] = true;
-
-  for (let neighbor of graph[node]) {
-    if (!visited[neighbor]) {
-      if (hasCycle(graph, neighbor, node, visited)) return true;
-    } else if (neighbor !== prev) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-let line = 0;
-let testCase = 1;
+let index = 0;
+let caseNo = 1;
 
 while (1) {
-  let [n, m] = input[line].split(" ").map(Number);
+	let [N, M] = input[index].split(' ').map(Number);
 
-  if (n === 0 && m === 0) break;
+	if (N === 0 && M === 0) break;
 
-  let visited = new Array(n + 1).fill(false);
-  let graph = [];
+	let graph = Array.from({ length: N + 1 }, () => []);
+	for (let i = index + 1; i <= index + M; i++) {
+		let [from, to] = input[i].split(' ').map(Number);
+		graph[from].push(to);
+		graph[to].push(from);
+	}
 
-  for (let i = 1; i <= n; i++) {
-    graph[i] = [];
-  }
+	let visited = Array(N + 1).fill(false);
 
-  for (let i = 0; i < m; i++) {
-    let [x, y] = input[line + 1 + i].split(" ").map(Number);
-    graph[x].push(y);
-    graph[y].push(x);
-  }
+	function hasCycle(node, prev) {
+		visited[node] = true;
 
-  let count = 0;
-  for (let i = 1; i <= n; i++) {
-    if (!visited[i] && !hasCycle(graph, i, 0, visited)) {
-      count++;
-    }
-  }
+		for (let next of graph[node]) {
+			if (!visited[next]) {
+				if (hasCycle(next, node)) return true;
+			} else if (next !== prev) return true;
+		}
 
-  if (count > 1) {
-    console.log(`Case ${testCase}: A forest of ${count} trees.`);
-  } else if (count === 1) {
-    console.log(`Case ${testCase}: There is one tree.`);
-  } else {
-    console.log(`Case ${testCase}: No trees.`);
-  }
+		return false;
+	}
 
-  line += m + 1;
-  testCase++;
+	let answer = 0;
+	for (let i = 1; i <= N; i++) {
+		if (visited[i]) continue;
+
+		if (!hasCycle(i, 0)) answer++;
+	}
+
+	if (answer === 0) console.log(`Case ${caseNo}: No trees.`);
+	else if (answer === 1) console.log(`Case ${caseNo}: There is one tree.`);
+	else console.log(`Case ${caseNo}: A forest of ${answer} trees.`);
+
+	caseNo++;
+	index += M + 1;
 }
