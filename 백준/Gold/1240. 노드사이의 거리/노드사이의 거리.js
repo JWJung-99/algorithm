@@ -1,35 +1,32 @@
 let fs = require('fs');
 let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-const [n, m] = input[0].split(" ").map(Number);
-let graph = new Array(n + 1);
+let [N, M] = input[0].split(' ').map(Number);
 
-for (let i = 1; i <= n; i++) {
-  graph[i] = [];
+let graph = Array.from({ length: N + 1 }, () => []);
+
+for (let i = 1; i <= N - 1; i++) {
+	let [from, to, dist] = input[i].split(' ').map(Number);
+	graph[from].push([to, dist]);
+	graph[to].push([from, dist]);
 }
 
-for (let i = 1; i < n; i++) {
-  const [from, to, dist] = input[i].split(" ").map(Number);
+for (let i = N; i <= N + M - 1; i++) {
+	let [start, dest] = input[i].split(' ').map(Number);
+	let visited = Array(N + 1).fill(false);
 
-  graph[from].push([to, dist]);
-  graph[to].push([from, dist]);
-}
+	function DFS(node, dest, distance) {
+		if (node === dest) console.log(distance);
 
-const dfs = (graph, start, visited, distance, current) => {
-  if (visited[start]) return;
+		for (let [next, dist] of graph[node]) {
+			if (visited[next]) continue;
 
-  distance[start] = current;
-  visited[start] = true;
+			visited[next] = true;
+			DFS(next, dest, distance + dist);
+			visited[next] = false;
+		}
+	}
 
-  for (let [node, dist] of graph[start]) {
-    dfs(graph, node, visited, distance, current + dist);
-  }
-};
-
-for (let i = 0; i < m; i++) {
-  const [from, to] = input[n + i].split(" ").map(Number);
-  let visited = new Array(n + 1).fill(false);
-  let distance = new Array(n + 1).fill(0);
-  dfs(graph, from, visited, distance, 0);
-  console.log(distance[to]);
+	visited[start] = true;
+	DFS(start, dest, 0);
 }
