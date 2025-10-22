@@ -1,56 +1,54 @@
 let fs = require('fs');
 let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-const [n, m] = input[0].split(" ").map(Number);
+let [N, M] = input[0].split(' ').map(Number);
 
 let houses = [];
 let chickens = [];
+for (let i = 1; i <= N; i++) {
+	let lines = input[i].split(' ').map(Number);
 
-for (let i = 1; i <= n; i++) {
-  let r = input[i].split(" ").map(Number);
-
-  for (let j = 0; j < n; j++) {
-    if (r[j] === 1) houses.push([i, j + 1]);
-    if (r[j] === 2) chickens.push([i, j + 1]);
-  }
+	for (let j = 0; j < lines.length; j++) {
+		if (lines[j] === 1) houses.push([i - 1, j]);
+		else if (lines[j] === 2) chickens.push([i - 1, j]);
+	}
 }
 
-let visited = new Array(chickens.length).fill(false);
+// 치킨 거리 계산
+function calcChickenDistance(arr) {
+	let sum = 0;
+	for (let [houseX, houseY] of houses) {
+		let distance = 1e9;
+		for (let [chickenX, chickenY] of arr) {
+			distance = Math.min(
+				distance,
+				Math.abs(chickenX - houseX) + Math.abs(chickenY - houseY)
+			);
+		}
+		sum += distance;
+	}
+	return sum;
+}
+
+// 남길 치킨집 선택
+let visited = Array(chickens.length).fill(false);
 let selected = [];
 let answer = 1e9;
+function DFS(n, start) {
+	if (n === M) {
+		answer = Math.min(answer, calcChickenDistance(selected));
+		return;
+	} else {
+		for (let i = start; i < chickens.length; i++) {
+			if (visited[i]) continue;
 
-function dfs(depth, start) {
-  if (depth === m) {
-    let result = [];
-    for (let i of selected) result.push(chickens[i]);
-
-    let sum = 0;
-
-    for (let [hx, hy] of houses) {
-      let temp = 1e9;
-
-      for (let [cx, cy] of result) {
-        temp = Math.min(temp, Math.abs(cx - hx) + Math.abs(cy - hy));
-      }
-
-      sum += temp;
-    }
-
-    answer = Math.min(answer, sum);
-
-    return;
-  }
-
-  for (let i = start; i < chickens.length; i++) {
-    if (visited[i]) continue;
-
-    visited[i] = true;
-    selected.push(i);
-    dfs(depth + 1, i + 1);
-    selected.pop();
-    visited[i] = false;
-  }
+			visited[i] = true;
+			selected.push(chickens[i]);
+			DFS(n + 1, i);
+			selected.pop();
+			visited[i] = false;
+		}
+	}
 }
-
-dfs(0, 0);
+DFS(0, 0);
 console.log(answer);
