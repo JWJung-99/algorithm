@@ -2,40 +2,34 @@ let fs = require('fs');
 let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
 let testCase = Number(input[0]);
-let i = 1;
+let line = 1;
 
-while (testCase > 0) {
-  let n = Number(input[i]);
-  let students = [0, ...input[i + 1].split(" ").map(Number)];
-  let visited = new Array(n + 1).fill(false);
-  let finished = new Array(n + 1).fill(false);
-  let member = 0;
+while (testCase--) {
+	let N = Number(input[line]);
+	let graph = [0, ...input[line + 1].split(' ').map(Number)];
 
-  // 방문처리, 완료처리 모두 진행
-  function dfs(arr, start) {
-    visited[start] = true;
-    let next = arr[start];
+	let visited = Array(N + 1).fill(false);
+	let finished = Array(N + 1).fill(false);
+	let member = 0;
 
-    // 방문하지 않은 경우 연결된 노드 dfs
-    if (!visited[next]) dfs(arr, next);
-    // 방문은 했는데 완료처리가 안 된 경우 => 사이클!
-    else if (!finished[next]) {
-      for (let i = next; i !== start; i = arr[i]) {
-        member++;
-      }
+	function DFS(node) {
+		// 현재 노드 방문 처리
+		visited[node] = true;
 
-      member++;
-    }
-    // 현재 노드 완료처리
-    finished[start] = true;
-  }
+		let next = graph[node];
+		if (!visited[next]) DFS(next);
+		// 다음 노드를 방문한 적이 있는데 완료 처리가 되지 않았으면 사이클이 존재
+		else if (!finished[next]) {
+			for (let i = next; i !== node; i = graph[i]) member++;
+			member++;
+		}
+		finished[node] = true;
+	}
 
-  for (let i = 1; i <= n; i++) {
-    if (!visited[i]) dfs(students, i);
-  }
+	for (let i = 1; i <= N; i++) {
+		if (!visited[i]) DFS(i);
+	}
 
-  console.log(n - member);
-
-  i += 2;
-  testCase--;
+	console.log(N - member);
+	line += 2;
 }
