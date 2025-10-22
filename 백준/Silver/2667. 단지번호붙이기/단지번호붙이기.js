@@ -1,41 +1,53 @@
 let fs = require('fs');
 let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
-
-let n = Number(input[0]);
-
-let graph = [];
-for (let i = 1; i <= n; i++) {
-  graph.push(input[i].split("").map(Number));
+let N = Number(input[0]);
+let map = [];
+for (let i = 1; i <= N; i++) {
+	map.push(input[i].split('').map(Number));
 }
 
-function dfs(x, y) {
-  // 범위를 벗어남
-  if (x <= -1 || x >= n || y <= -1 || y >= n) return 0;
+let visited = Array.from({ length: N }, () => Array(N).fill(false));
 
-  // 집이 있다면
-  if (graph[x][y] === 1) {
-    // 해당 위치 방문 처리
-    graph[x][y] = -1;
-    let result = 1;
+let cnt = 0;
+let complex = [];
 
-    result += dfs(x - 1, y);
-    result += dfs(x + 1, y);
-    result += dfs(x, y - 1);
-    result += dfs(x, y + 1);
+let dx = [1, 0, -1, 0];
+let dy = [0, 1, 0, -1];
 
-    return result;
-  }
+function DFS(x, y) {
+	let total = 1;
 
-  return 0;
+	for (let i = 0; i < 4; i++) {
+		let nextX = x + dx[i];
+		let nextY = y + dy[i];
+
+		if (
+			nextX < 0 ||
+			nextX >= N ||
+			nextY < 0 ||
+			nextY >= N ||
+			visited[nextX][nextY]
+		)
+			continue;
+
+		if (map[nextX][nextY] === 1) {
+			visited[nextX][nextY] = true;
+			total += DFS(nextX, nextY);
+		}
+	}
+
+	return total;
 }
 
-let answer = [];
-for (let i = 0; i < n; i++) {
-  for (let j = 0; j < n; j++) {
-    let current = dfs(i, j);
-    if (current > 0) answer.push(current);
-  }
+for (let i = 0; i < N; i++) {
+	for (let j = 0; j < N; j++) {
+		if (map[i][j] === 1 && !visited[i][j]) {
+			cnt++;
+			visited[i][j] = true;
+			complex.push(DFS(i, j));
+		}
+	}
 }
 
-answer.sort((a, b) => a - b);
-console.log(answer.length + "\n" + answer.join("\n"));
+console.log(cnt);
+console.log(complex.sort((a, b) => a - b).join('\n'));
