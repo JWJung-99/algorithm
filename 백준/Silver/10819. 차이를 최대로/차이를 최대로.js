@@ -1,37 +1,32 @@
 let fs = require('fs');
 let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-const N = Number(input[0]);
-const num = input[1].split(" ").map(Number);
-const visited = Array(N).fill(false);
-const selected = [];
-const answer = [];
+let N = Number(input[0]);
+let numbers = input[1].split(' ').map(Number);
 
-const calculateAnswer = (arr, num) => {
-  let sum = 0;
+let visited = Array(N).fill(false);
+let selected = [];
+let answer = 0;
 
-  for (let i = 0; i < arr.length - 1; i++) {
-    sum += Math.abs(num[arr[i]] - num[arr[i + 1]]);
-  }
+function DFS(n) {
+	if (n === N) {
+		let sum = 0;
+		for (let i = 0; i < N - 1; i++) {
+			sum += Math.abs(selected[i] - selected[i + 1]);
+		}
+		answer = Math.max(answer, sum);
+	} else {
+		for (let i = 0; i < N; i++) {
+			if (visited[i]) continue;
 
-  return sum;
-};
-
-const DFS = (depth) => {
-  if (depth === N) {
-    answer.push(calculateAnswer(selected, num));
-  }
-
-  for (let i = 0; i < N; i++) {
-    if (visited[i]) continue;
-
-    visited[i] = true;
-    selected.push(i);
-    DFS(depth + 1);
-    selected.pop();
-    visited[i] = false;
-  }
-};
+			visited[i] = true;
+			selected.push(numbers[i]);
+			DFS(n + 1);
+			selected.pop();
+			visited[i] = false;
+		}
+	}
+}
 
 DFS(0);
-console.log(Math.max(...answer));
+console.log(answer);
