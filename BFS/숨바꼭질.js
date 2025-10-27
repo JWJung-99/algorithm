@@ -1,52 +1,26 @@
-class Queue {
-  constructor() {
-    this.items = {};
-    this.headIndex = 0;
-    this.tailIndex = 0;
-  }
+import fs from 'fs';
+let input = fs.readFileSync('../input.txt').toString().trim().split('\n');
 
-  enqueue(item) {
-    this.items[this.tailIndex] = item;
-    this.tailIndex++;
-  }
+let [N, K] = input[0].split(' ').map(Number);
 
-  dequeue() {
-    const item = this.items[this.headIndex];
-    delete this.items[this.headIndex];
-    this.headIndex++;
+let visited = Array(100001).fill(0);
+let queue = [];
 
-    return item;
-  }
+queue.push(N);
 
-  getLength() {
-    return this.tailIndex - this.headIndex;
-  }
+while (queue.length) {
+	let current = queue.shift();
+
+	if (current === K) break;
+
+	for (let next of [current - 1, current + 1, current * 2]) {
+		if (next < 0 || next >= 100001) continue;
+
+		if (visited[next] === 0) {
+			visited[next] = visited[current] + 1;
+			queue.push(next);
+		}
+	}
 }
 
-import fs from "fs";
-let input = fs.readFileSync("../input.txt").toString().trim().split("\n");
-
-let MAX = 100001;
-let [n, k] = input[0].split(" ").map(Number);
-let visited = new Array(MAX).fill(0);
-
-function bfs() {
-  const queue = [];
-  queue.push(n);
-
-  while (queue.length > 0) {
-    let current = queue.shift();
-    if (current === k) return visited[current];
-
-    for (let next of [current - 1, current + 1, current * 2]) {
-      if (next < 0 || next >= MAX) continue;
-
-      if (visited[next] === 0) {
-        visited[next] = visited[current] + 1;
-        queue.push(next);
-      }
-    }
-  }
-}
-
-console.log(bfs());
+console.log(visited[K]);
