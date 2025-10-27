@@ -2,44 +2,38 @@ let fs = require('fs');
 let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
 let testCase = Number(input[0]);
-let index = 1;
+let line = 1;
 
-function bfs(size, visited, [curX, curY], [tarX, tarY]) {
-  let queue = [];
-  queue.push([curX, curY]);
+let dx = [-2, -2, -1, -1, 1, 1, 2, 2];
+let dy = [-1, 1, -2, 2, -2, 2, -1, 1];
 
-  while (queue.length > 0) {
-    let [x, y] = queue.shift();
-    if (x === tarX && y === tarY) return visited[x][y];
+while (testCase--) {
+	let I = Number(input[line]);
+	let [X, Y] = input[line + 1].split(' ').map(Number);
+	let [tarX, tarY] = input[line + 2].split(' ').map(Number);
 
-    for (let [nextX, nextY] of [
-      [x + 1, y + 2],
-      [x + 2, y + 1],
-      [x + 1, y - 2],
-      [x + 2, y - 1],
-      [x - 1, y + 2],
-      [x - 2, y + 1],
-      [x - 1, y - 2],
-      [x - 2, y - 1],
-    ]) {
-      if (nextX < 0 || nextX >= size || nextY < 0 || nextY >= size) continue;
+	let visited = Array.from({ length: I }, () => Array(I).fill(0));
+	let queue = [[X, Y]];
 
-      if (visited[nextX][nextY] === 0) {
-        visited[nextX][nextY] = visited[x][y] + 1;
-        queue.push([nextX, nextY]);
-      }
-    }
-  }
-}
+	while (queue.length) {
+		let [curX, curY] = queue.shift();
 
-while (testCase > 0) {
-  let size = Number(input[index]);
-  let current = input[index + 1].split(" ").map(Number);
-  let target = input[index + 2].split(" ").map(Number);
-  let visited = Array.from(Array(size), () => Array(size).fill(0));
+		if (curX === tarX && curY === tarY) break;
 
-  console.log(bfs(size, visited, current, target));
+		for (let i = 0; i < 8; i++) {
+			let nextX = curX + dx[i];
+			let nextY = curY + dy[i];
 
-  index += 3;
-  testCase--;
+			if (nextX < 0 || nextX >= I || nextY < 0 || nextY >= I) continue;
+
+			if (visited[nextX][nextY] === 0) {
+				visited[nextX][nextY] = visited[curX][curY] + 1;
+				queue.push([nextX, nextY]);
+			}
+		}
+	}
+
+	console.log(visited[tarX][tarY]);
+
+	line += 3;
 }
