@@ -1,23 +1,41 @@
 function solution(n, computers) {
-    let answer = 0;
-    let visited = Array.from({ length: n }, () => false);
-    
-    function DFS(index) {
-        visited[index] = true;
-        
-        for (let i = 0; i < computers[index].length; i++) {
-            if (!visited[i] && computers[index][i] === 1) {
-                DFS(i);
-            }
-        }
-    }
-    
-    for (let i = 0; i < n; i++) {
-        if (visited[i]) continue;
-        
-        DFS(i);
-        answer++;
-    }
-    
-    return answer;
+	let graph = Array.from({ length: n }, () => new Set([]));
+	for (let i = 0; i < n; i++) {
+		for (let j = 0; j < n; j++) {
+			if (i === j) continue;
+
+			if (computers[i][j] === 1) {
+				graph[i].add(j);
+				graph[j].add(i);
+			}
+		}
+	}
+	graph = graph.map((item) => [...item]);
+
+	let answer = 0;
+	let visited = Array(n).fill(false);
+
+	function BFS(node) {
+		visited[node] = true;
+		let queue = [node];
+
+		while (queue.length) {
+			let curNode = queue.shift();
+
+			for (let x of graph[curNode]) {
+				if (!visited[x]) {
+					BFS(x);
+				}
+			}
+		}
+	}
+
+	for (let i = 0; i < n; i++) {
+		if (!visited[i]) {
+			answer++;
+			BFS(i);
+		}
+	}
+
+	return answer;
 }
