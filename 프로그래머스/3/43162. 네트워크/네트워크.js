@@ -1,4 +1,27 @@
-function solution(n, computers) {
+// DFS
+function solution1(n, computers) {
+	let answer = 0;
+	let visited = Array(n).fill(false);
+
+	function DFS(node) {
+		visited[node] = true;
+
+		for (let i = 0; i < n; i++) {
+			if (visited[i]) continue;
+			if (computers[node][i] === 1) DFS(i);
+		}
+	}
+
+	for (let i = 0; i < n; i++) {
+		if (!visited[i]) {
+			answer++;
+			DFS(i);
+		}
+	}
+}
+
+// BFS
+function solution2(n, computers) {
 	let graph = Array.from({ length: n }, () => new Set([]));
 	for (let i = 0; i < n; i++) {
 		for (let j = 0; j < n; j++) {
