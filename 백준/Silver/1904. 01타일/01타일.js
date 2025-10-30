@@ -3,13 +3,13 @@ let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
 let N = Number(input[0]);
 
-let d = new Array(10000001).fill(0);
+let dp = Array(100001).fill(0);
 
-d[1] = 1;
-d[2] = 2;
+dp[1] = 1;
+dp[2] = 2;
 
 for (let i = 3; i <= N; i++) {
-  d[i] = (d[i - 1] + d[i - 2]) % 15746;
+	dp[i] = (dp[i - 1] + dp[i - 2]) % 15746;
 }
 
-console.log(d[N]);
+console.log(dp[N]);
