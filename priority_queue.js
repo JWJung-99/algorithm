@@ -1,14 +1,10 @@
-export default class PriorityQueue {
+class PriorityQueue {
 	constructor() {
 		this.heap = [];
 	}
 
-	size() {
-		return this.heap.length;
-	}
-
 	isEmpty() {
-		return this.size() === 0;
+		return this.heap.length === 0;
 	}
 
 	swap(idx1, idx2) {
@@ -16,17 +12,17 @@ export default class PriorityQueue {
 	}
 
 	insert(node, priority) {
-		this.heap.push({ node, priority });
+		this.heap.push([node, priority]);
 		this.bubbleUp();
 	}
 
 	bubbleUp() {
-		let idx = this.size() - 1;
+		let idx = this.heap.length - 1;
 		let parentIdx = Math.floor((idx - 1) / 2);
 
 		while (
 			this.heap[parentIdx] &&
-			this.heap[idx].priority < this.heap[parentIdx].priority
+			this.heap[idx][1] < this.heap[parentIdx][1]
 		) {
 			this.swap(idx, parentIdx);
 			idx = parentIdx;
@@ -36,12 +32,16 @@ export default class PriorityQueue {
 
 	delete() {
 		if (this.isEmpty()) return null;
-		if (this.size() === 1) return this.heap[0];
 
-		const value = this.heap[0];
-		this.heap[0] = this.heap.pop();
-		this.bubbleDown();
-		return value;
+		const rootNode = this.heap[0];
+		const lastNode = this.heap.pop();
+
+		if (this.heap.length > 0) {
+			this.heap[0] = lastNode;
+			this.bubbleDown();
+		}
+
+		return rootNode;
 	}
 
 	bubbleDown() {
@@ -50,16 +50,14 @@ export default class PriorityQueue {
 		let rightIdx = idx * 2 + 2;
 
 		while (
-			(this.heap[leftIdx] &&
-				this.heap[leftIdx].priority < this.heap[idx].priority) ||
-			(this.heap[rightIdx] &&
-				this.heap[rightIdx].priority < this.heap[idx].priority)
+			(this.heap[leftIdx] && this.heap[leftIdx][1] < this.heap[idx][1]) ||
+			(this.heap[rightIdx] && this.heap[rightIdx][1] < this.heap[idx][1])
 		) {
 			let smallerIdx = leftIdx;
 
 			if (
 				this.heap[rightIdx] &&
-				this.heap[rightIdx].priority < this.heap[smallerIdx].priority
+				this.heap[rightIdx][1] < this.heap[smallerIdx][1]
 			)
 				smallerIdx = rightIdx;
 
