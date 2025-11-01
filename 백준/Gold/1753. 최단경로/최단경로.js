@@ -1,104 +1,110 @@
 let fs = require('fs');
 let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
-class MinHeap {
-  constructor() {
-    this.heap = [];
-  }
+class PriorityQueue {
+	constructor() {
+		this.heap = [];
+	}
 
-  enqueue(node) {
-    this.heap.push(node);
-    this.bubbleUp();
-  }
+	isEmpty() {
+		return this.heap.length === 0;
+	}
 
-  dequeue() {
-    if (this.heap.length === 1) return this.heap.pop();
-    const min = this.heap[0];
-    this.heap[0] = this.heap.pop();
-    this.sinkDown();
-    return min;
-  }
+	swap(idx1, idx2) {
+		[this.heap[idx1], this.heap[idx2]] = [this.heap[idx2], this.heap[idx1]];
+	}
 
-  bubbleUp() {
-    let index = this.heap.length - 1;
-    const element = this.heap[index];
-    while (index > 0) {
-      let parentIndex = Math.floor((index - 1) / 2);
-      let parent = this.heap[parentIndex];
-      if (element[1] >= parent[1]) break;
-      this.heap[index] = parent;
-      index = parentIndex;
-    }
-    this.heap[index] = element;
-  }
+	insert(node, priority) {
+		this.heap.push([node, priority]);
+		this.bubbleUp();
+	}
 
-  sinkDown() {
-    let index = 0;
-    const length = this.heap.length;
-    const element = this.heap[0];
+	bubbleUp() {
+		let idx = this.heap.length - 1;
+		let parentIdx = Math.floor((idx - 1) / 2);
 
-    while (true) {
-      let leftChildIndex = 2 * index + 1;
-      let rightChildIndex = 2 * index + 2;
-      let leftChild, rightChild;
-      let swap = null;
+		while (
+			this.heap[parentIdx] &&
+			this.heap[idx][1] < this.heap[parentIdx][1]
+		) {
+			this.swap(idx, parentIdx);
+			idx = parentIdx;
+			parentIdx = Math.floor((idx - 1) / 2);
+		}
+	}
 
-      if (leftChildIndex < length) {
-        leftChild = this.heap[leftChildIndex];
-        if (leftChild[1] < element[1]) swap = leftChildIndex;
-      }
-      if (rightChildIndex < length) {
-        rightChild = this.heap[rightChildIndex];
-        if (
-          (swap === null && rightChild[1] < element[1]) ||
-          (swap !== null && rightChild[1] < leftChild[1])
-        )
-          swap = rightChildIndex;
-      }
-      if (swap === null) break;
-      this.heap[index] = this.heap[swap];
-      index = swap;
-    }
-    this.heap[index] = element;
-  }
+	delete() {
+		if (this.isEmpty()) return null;
 
-  getLength() {
-    return this.heap.length;
-  }
+		const rootNode = this.heap[0];
+		const lastNode = this.heap.pop();
+
+		if (this.heap.length > 0) {
+			this.heap[0] = lastNode;
+			this.bubbleDown();
+		}
+
+		return rootNode;
+	}
+
+	bubbleDown() {
+		let idx = 0;
+		let leftIdx = idx * 2 + 1;
+		let rightIdx = idx * 2 + 2;
+
+		while (
+			(this.heap[leftIdx] && this.heap[leftIdx][1] < this.heap[idx][1]) ||
+			(this.heap[rightIdx] && this.heap[rightIdx][1] < this.heap[idx][1])
+		) {
+			let smallerIdx = leftIdx;
+
+			if (
+				this.heap[rightIdx] &&
+				this.heap[rightIdx][1] < this.heap[smallerIdx][1]
+			)
+				smallerIdx = rightIdx;
+
+			this.swap(idx, smallerIdx);
+			idx = smallerIdx;
+			leftIdx = idx * 2 + 1;
+			rightIdx = idx * 2 + 2;
+		}
+	}
 }
 
-let INF = 1e9;
-let [V, E] = input[0].split(" ").map(Number);
-let startNode = Number(input[1]);
-let graph = Array.from(new Array(V + 1), () => []);
+const INF = 1e9;
 
-for (let i = 2; i < E + 2; i++) {
-  let [from, to, dist] = input[i].split(" ").map(Number);
-  graph[from].push([to, dist]);
+let [V, E] = input[0].split(' ').map(Number);
+let K = Number(input[1]);
+
+let graph = Array.from({ length: V + 1 }, () => []);
+for (let i = 2; i <= E + 1; i++) {
+	let [from, to, cost] = input[i].split(' ').map(Number);
+	graph[from].push([to, cost]);
 }
 
-const pq = new MinHeap();
-let distArr = Array(graph.length).fill(INF);
+let distance = Array(V + 1).fill(INF);
 
-distArr[startNode] = 0;
-pq.enqueue([startNode, 0]);
+let queue = new PriorityQueue();
+queue.insert(K, 0);
+distance[K] = 0;
 
-while (pq.getLength()) {
-  const [to, dist] = pq.dequeue();
+while (!queue.isEmpty()) {
+	let [node, dist] = queue.delete();
 
-  if (dist > distArr[to]) continue;
+	if (distance[node] < dist) continue;
 
-  graph[to].forEach((next) => {
-    const acc = distArr[to] + next[1];
+	for (let x of graph[node]) {
+		let cost = dist + x[1];
 
-    if (distArr[next[0]] > acc) {
-      distArr[next[0]] = acc;
-      pq.enqueue([next[0], acc]);
-    }
-  });
+		if (cost < distance[x[0]]) {
+			distance[x[0]] = cost;
+			queue.insert(x[0], cost);
+		}
+	}
 }
 
-for (let i = 1; i < distArr.length; i++) {
-  if (distArr[i] === INF) console.log("INF");
-  else console.log(distArr[i]);
+for (let i = 1; i <= V; i++) {
+	if (distance[i] === INF) console.log('INF');
+	else console.log(distance[i]);
 }
