@@ -2,18 +2,15 @@ let fs = require('fs');
 let input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
 let N = Number(input[0]);
-let arr = [0, ...input[1].split(" ").map(Number)];
-let M = Number(input[2]);
-let prefixSum = [0];
+let num = input[1].split(' ').map(Number);
 
-let sum = 0;
-for (let i = 1; i <= N; i++) {
-  sum += arr[i];
-  prefixSum.push(sum);
+let p = [0];
+for (let i = 0; i < N; i++) {
+	p.push(num[i] + p[i]);
 }
 
-for (let i = 3; i < M + 3; i++) {
-  let [from, to] = input[i].split(" ").map(Number);
-
-  console.log(prefixSum[to] - prefixSum[from - 1]);
+let M = Number(input[2]);
+for (let i = 3; i <= M + 2; i++) {
+	let [left, right] = input[i].split(' ').map(Number);
+	console.log(p[right] - p[left - 1]);
 }
