@@ -20,10 +20,7 @@ class PriorityQueue {
 		let idx = this.heap.length - 1;
 		let parentIdx = Math.floor((idx - 1) / 2);
 
-		while (
-			this.heap[parentIdx] &&
-			this.heap[idx][1] < this.heap[parentIdx][1]
-		) {
+		while (parentIdx >= 0 && this.heap[idx][1] < this.heap[parentIdx][1]) {
 			this.swap(idx, parentIdx);
 			idx = parentIdx;
 			parentIdx = Math.floor((idx - 1) / 2);
@@ -46,25 +43,28 @@ class PriorityQueue {
 
 	bubbleDown() {
 		let idx = 0;
-		let leftIdx = idx * 2 + 1;
-		let rightIdx = idx * 2 + 2;
 
-		while (
-			(this.heap[leftIdx] && this.heap[leftIdx][1] < this.heap[idx][1]) ||
-			(this.heap[rightIdx] && this.heap[rightIdx][1] < this.heap[idx][1])
-		) {
-			let smallerIdx = leftIdx;
+		while (true) {
+			let leftIdx = idx * 2 + 1;
+			let rightIdx = idx * 2 + 2;
+			let smallestIdx = idx;
+
+			if (
+				this.heap[leftIdx] &&
+				this.heap[leftIdx][1] < this.heap[smallestIdx][1]
+			)
+				smallestIdx = leftIdx;
 
 			if (
 				this.heap[rightIdx] &&
-				this.heap[rightIdx][1] < this.heap[smallerIdx][1]
+				this.heap[rightIdx][1] < this.heap[smallestIdx][1]
 			)
-				smallerIdx = rightIdx;
+				smallestIdx = rightIdx;
 
-			this.swap(idx, smallerIdx);
-			idx = smallerIdx;
-			leftIdx = idx * 2 + 1;
-			rightIdx = idx * 2 + 2;
+			if (smallestIdx === idx) break;
+
+			this.swap(idx, smallestIdx);
+			idx = smallestIdx;
 		}
 	}
 }
