@@ -1,6 +1,24 @@
+function calculator(oper, a, b) {
+	if (oper === '+') return a + b;
+	else if (oper === '-') return a - b;
+	else return a * b;
+}
+
 function solution(expression) {
-	var answer = 0;
-	return answer;
+	// 연산자 조합
+	let priorities = [
+		['+', '-', '*'],
+		['+', '*', '-'],
+		['-', '+', '*'],
+		['-', '*', '+'],
+		['*', '+', '-'],
+		['*', '-', '+'],
+	];
+
+	const numbers = expression.split(/[+-*]/g);
+	const operators = expression.match(/[+-*]/g);
+
+	console.log(numbers, operators);
 }
 
 // console.log(solution());
