@@ -1,26 +1,19 @@
-function calculator(oper, a, b) {
-	if (oper === '+') return a + b;
-	else if (oper === '-') return a - b;
-	else return a * b;
-}
-
-function solution(expression) {
-	// 연산자 조합
-	let priorities = [
-		['+', '-', '*'],
-		['+', '*', '-'],
-		['-', '+', '*'],
-		['-', '*', '+'],
-		['*', '+', '-'],
-		['*', '-', '+'],
-	];
-
-	const numbers = expression.split(/[+-*]/g);
-	const operators = expression.match(/[+-*]/g);
-
-	console.log(numbers, operators);
+function solution(data, col, row_begin, row_end) {
+	var answer = 0;
+	return answer;
 }
 
 // console.log(solution());
-console.log(solution('100-200*300-500+20'));
-console.log(solution('50*6-3*2'));
+console.log(
+	solution(
+		[
+			[2, 2, 6],
+			[1, 5, 10],
+			[4, 2, 9],
+			[3, 8, 3],
+		],
+		2,
+		2,
+		3
+	)
+);
