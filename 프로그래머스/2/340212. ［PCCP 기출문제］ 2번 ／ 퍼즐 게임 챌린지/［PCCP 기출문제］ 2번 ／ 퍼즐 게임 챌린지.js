@@ -2,12 +2,14 @@ function solution(diffs, times, limit) {
 	let answer = Number.MAX_SAFE_INTEGER;
 	let n = diffs.length;
 	let start = 1;
-	let end = diffs.reduce((a, b) => Math.max(a, b), 0);;
+	let end = diffs.reduce((a, b) => Math.max(a, b), 0); // O(N) - N: diffs의 길이 (최대 300,000)
 
-	while (start <= end) {
+    // O(N * logM) - 최악의 경우 300,000 * log2(100,000) ~= 5,100,000
+	while (start <= end) { // O(logM) - M: diffs[i]의 최댓값 (최대 100,000);
 		let mid = parseInt((start + end) / 2);
 		let time = 0;
-
+        
+        // O(N) - N: diffs의 길이
 		for (let i = 0; i < n; i++) {
 			let diff = diffs[i];
 			let time_cur = times[i];
