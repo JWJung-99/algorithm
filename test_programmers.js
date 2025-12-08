@@ -1,8 +1,14 @@
-function solution(diffs, times, limit) {
-	var answer = 0;
-	return answer;
+function solution(n, coins) {
+	let dp = [1, ...Array(n).fill(0)];
+
+	for (let coin of coins) {
+		for (let i = 1; i <= n; i++) {
+			if (i >= coin) dp[i] += dp[i - coin] % 1000000007;
+		}
+	}
+
+	return dp[n];
 }
 
 // console.log(solution());
-console.log(solution([1, 5, 3], [2, 4, 7], 30));
-console.log(solution([1, 328, 467, 209, 54], [2, 7, 1, 4, 3], 1723));
+console.log(solution(5, [1, 2, 5]));
