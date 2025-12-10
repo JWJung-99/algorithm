@@ -1,14 +1,33 @@
-function solution(n, coins) {
-	let dp = [1, ...Array(n).fill(0)];
+function solution(n) {
+	let answer = 0;
+	let queens = [];
 
-	for (let coin of coins) {
-		for (let i = 1; i <= n; i++) {
-			if (i >= coin) dp[i] += dp[i - coin] % 1000000007;
+	function isPossible(x, y) {
+		for (let [a, b] of queens) {
+			if (x === a || y === b) return false;
+			if (Math.abs(x - a) === Math.abs(y - b)) return false;
+		}
+
+		return true;
+	}
+
+	function DFS(depth) {
+		if (depth === n) answer += 1;
+		else {
+			for (let i = 0; i < n; i++) {
+				if (!isPossible(depth, i)) continue;
+
+				queens.push([depth, i]);
+				DFS(depth + 1);
+				queens.pop();
+			}
 		}
 	}
 
-	return dp[n];
+	DFS(0);
+
+	return answer;
 }
 
 // console.log(solution());
-console.log(solution(5, [1, 2, 5]));
+console.log(solution(4));
